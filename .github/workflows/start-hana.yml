@@ -1,0 +1,40 @@
+name: Start HANA Cloud Automatically
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # 09:00 UTC+3
+  workflow_dispatch:
+
+jobs:
+  start-hana:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download cf CLI
+        run: |
+          curl -L "https://github.com/cloudfoundry/cli/releases/latest/download/cf8-cli_8.14.1_linux_x86-64.tgz" -o cf8.tgz
+          tar -xzf cf8.tgz
+          chmod +x cf8
+          mkdir -p ~/.local/bin
+          cp cf8 ~/.local/bin/cf
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Login to Cloud Foundry
+        env:
+          CF_API: ${{ secrets.CF_API }}
+          CF_USERNAME: ${{ secrets.CF_USERNAME }}
+          CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+          CF_ORG: ${{ secrets.CF_ORG }}
+          CF_SPACE: ${{ secrets.CF_SPACE }}
+        run: |
+          cf login -a "$CF_API" \
+            -u "$CF_USERNAME" \
+            -p "$CF_PASSWORD" \
+            -o "$CF_ORG" \
+            -s "$CF_SPACE"
+            
+      - name: Wake up HANA 🐣
+        env:
+          CF_SERVICE_INSTANCE: ${{ secrets.CF_SERVICE_INSTANCE }}
+        run: |
+          echo "⏰ Waking up HANA like a sleepy cat..."
+          cf update-service "$CF_SERVICE_INSTANCE" -c '{"data":{"serviceStopped":false}}' --wait
