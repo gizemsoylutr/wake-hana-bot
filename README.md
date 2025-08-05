@@ -16,16 +16,8 @@ Because let’s be honest – nobody wants to type `cf update-service` before th
 
 ## 🤔 Why This?
 
-There are dozens of ways to start HANA in BTP:
-- cf CLI
-- btp CLI
-- Cockpit Click-Fest™
-- Terraform spells 🧙‍♂️
-- SCP Cry Mode™ 😭
-- SAP Process Automation yoga 🧘‍♀️
-- Or the classic `curl + cp + chmod` developer dance 💃
-
-But sometimes, simplicity wins. One GitHub Action. That’s it.
+Sure, there are tons of ways to start HANA — CLI spells, cockpit clicking marathons, REST API calls, etc.
+But sometimes, **GitHub Actions** is just the most elegant and visible way — especially when your repo is public and you want to share the joy 🎉
 
 ---
 
